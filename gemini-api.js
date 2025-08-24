@@ -11,7 +11,7 @@ class GeminiAPIService {
             temperature: 0.7,
             topK: 40,
             topP: 0.95,
-            maxOutputTokens: 1024
+            maxOutputTokens: 2048  // Increased from 1024 to allow longer responses
         };
     }
 
@@ -30,12 +30,25 @@ class GeminiAPIService {
      */
     validateApiKeyFormat(apiKey) {
         if (!apiKey || typeof apiKey !== 'string') {
+            console.warn('⚠️ API key validation failed: Empty or invalid type');
             return false;
         }
         
-        // Basic validation for Google API key format
-        const apiKeyPattern = /^[A-Za-z0-9_-]{39}$/;
-        return apiKeyPattern.test(apiKey.trim());
+        const trimmedKey = apiKey.trim();
+        
+        // Google API keys typically start with 'AIza' and are 39 characters long
+        const apiKeyPattern = /^AIza[A-Za-z0-9_-]{35}$/;
+        const isValid = apiKeyPattern.test(trimmedKey);
+        
+        if (!isValid) {
+            console.warn('⚠️ API key validation failed: Invalid format. Expected format: AIza... (39 characters total)');
+            console.warn('⚠️ Provided key length:', trimmedKey.length);
+            console.warn('⚠️ Provided key starts with:', trimmedKey.substring(0, 4));
+        } else {
+            console.log('✅ API key format validation passed');
+        }
+        
+        return isValid;
     }
 
     /**
@@ -102,6 +115,9 @@ class GeminiAPIService {
         const requestConfig = { ...this.defaultConfig, ...config };
         const url = `${this.baseURL}/models/${this.model}:generateContent?key=${key}`;
         
+        console.log('📡 Making API request to:', url.replace(key, '[API_KEY_HIDDEN]'));
+        console.log('🔧 Request config:', requestConfig);
+        
         const requestBody = {
             contents: [
                 {
@@ -137,6 +153,8 @@ class GeminiAPIService {
                 }
             ]
         };
+        
+        console.log('📜 Request body:', JSON.stringify(requestBody, null, 2));
 
         try {
             const response = await fetch(url, {
@@ -154,11 +172,16 @@ class GeminiAPIService {
 
             const data = await response.json();
             
+            // Debug logging for API response
+            console.log('🔍 Gemini API Response:', JSON.stringify(data, null, 2));
+            
             if (!data.candidates || data.candidates.length === 0) {
+                console.error('❌ No candidates in response:', data);
                 throw new Error('No response generated from the model');
             }
 
             const candidate = data.candidates[0];
+            console.log('🔍 Candidate data:', JSON.stringify(candidate, null, 2));
             
             if (candidate.finishReason === 'SAFETY') {
                 throw new Error('Response blocked due to safety concerns');
@@ -167,12 +190,50 @@ class GeminiAPIService {
             if (candidate.finishReason === 'RECITATION') {
                 throw new Error('Response blocked due to recitation concerns');
             }
-
-            if (!candidate.content || !candidate.content.parts || candidate.content.parts.length === 0) {
-                throw new Error('Invalid response format from the model');
+            
+            if (candidate.finishReason === 'MAX_TOKENS') {
+                console.warn('⚠️ Response was truncated due to max tokens limit');
+                // Continue processing but with a warning - we might still have partial content
             }
 
-            return candidate.content.parts[0].text || 'No response text available';
+            // More flexible response handling
+            let responseText = '';
+            
+            if (candidate.content && candidate.content.parts && candidate.content.parts.length > 0) {
+                responseText = candidate.content.parts[0].text;
+            } else if (candidate.content && candidate.content.text) {
+                // Alternative response format
+                responseText = candidate.content.text;
+            } else if (candidate.text) {
+                // Direct text property
+                responseText = candidate.text;
+            } else if (candidate.message) {
+                // Another possible format
+                responseText = candidate.message;
+            } else {
+                console.error('❌ Unexpected response structure:', candidate);
+                
+                // If MAX_TOKENS, provide a helpful message
+                if (candidate.finishReason === 'MAX_TOKENS') {
+                    throw new Error('Response was truncated due to token limit. Please try a shorter message or increase maxTokens in settings.');
+                }
+                
+                throw new Error('Invalid response format from the model');
+            }
+            
+            if (!responseText || responseText.trim() === '') {
+                if (candidate.finishReason === 'MAX_TOKENS') {
+                    throw new Error('Response was completely truncated due to token limit. Please increase maxTokens in settings.');
+                }
+                throw new Error('Empty response from the model');
+            }
+            
+            // Add truncation warning if needed
+            if (candidate.finishReason === 'MAX_TOKENS') {
+                responseText += '\n\n⚠️ *Note: This response was truncated due to token limit. You can increase the max tokens in settings for longer responses.*';
+            }
+
+            return responseText;
 
         } catch (error) {
             if (error instanceof APIError) {

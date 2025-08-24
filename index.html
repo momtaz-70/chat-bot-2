@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gemini Chatbot</title>
+    <title>Legal AI Assistant - دستیار هوش مصنوعی حقوقی</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -15,14 +15,21 @@
             <div class="header-content">
                 <div class="header-left">
                     <h1 class="title">
-                        <i class="fas fa-robot"></i>
-                        Gemini Chatbot
+                        <i class="fas fa-balance-scale"></i>
+                        Legal AI Assistant
+                        <span class="persian-title">دستیار حقوقی</span>
                     </h1>
-                    <span class="model-badge">2.5 Flash</span>
+                    <span class="model-badge">Iranian Legal Expert</span>
                 </div>
                 <div class="header-right">
+                    <button id="legalCalendarBtn" class="btn btn-secondary" title="Legal Calendar">
+                        <i class="fas fa-calendar-alt"></i>
+                    </button>
                     <button id="settingsBtn" class="btn btn-secondary" title="Settings">
                         <i class="fas fa-cog"></i>
+                    </button>
+                    <button id="legalToolsBtn" class="btn btn-secondary" title="Legal Tools">
+                        <i class="fas fa-gavel"></i>
                     </button>
                     <button id="clearChatBtn" class="btn btn-secondary" title="Clear Chat">
                         <i class="fas fa-trash"></i>
@@ -35,9 +42,16 @@
         <main class="chat-container">
             <div id="messagesContainer" class="messages-container">
                 <div class="welcome-message">
-                    <i class="fas fa-robot welcome-icon"></i>
-                    <h2>Welcome to Gemini Chatbot</h2>
-                    <p>I'm powered by Google's Gemini 2.5 Flash model. To get started, please configure your API key in the settings.</p>
+                    <i class="fas fa-balance-scale welcome-icon"></i>
+                    <h2>Legal AI Assistant for Iranian Lawyers</h2>
+                    <h3 class="persian-welcome">دستیار هوش مصنوعی برای وکلای ایرانی</h3>
+                    <p>Specialized AI assistant for Iranian legal practice. Get help with legal research, document drafting, case analysis, and Iranian law interpretation.</p>
+                    <div class="legal-specialties">
+                        <span class="specialty-badge">Civil Law - حقوق مدنی</span>
+                        <span class="specialty-badge">Criminal Law - حقوق جزا</span>
+                        <span class="specialty-badge">Commercial Law - حقوق تجارت</span>
+                        <span class="specialty-badge">Administrative Law - حقوق اداری</span>
+                    </div>
                     <button id="configureBtn" class="btn btn-primary">
                         <i class="fas fa-key"></i>
                         Configure API Key
@@ -61,12 +75,30 @@
                     <textarea 
                         id="messageInput" 
                         class="message-input" 
-                        placeholder="Type your message here... (Press Enter to send, Shift+Enter for new line)"
+                        placeholder="Ask me about Iranian law, legal procedures, document drafting... / در مورد قوانین ایران، رویه‌های حقوقی، تنظیم اسناد بپرسید..."
                         rows="1"
                         disabled
                     ></textarea>
                     <button id="sendBtn" class="send-btn" disabled title="Send Message">
                         <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                <div class="legal-quick-actions">
+                    <button class="quick-action-btn" data-template="contract-review">
+                        <i class="fas fa-file-contract"></i>
+                        Contract Review
+                    </button>
+                    <button class="quick-action-btn" data-template="legal-research">
+                        <i class="fas fa-search"></i>
+                        Legal Research
+                    </button>
+                    <button class="quick-action-btn" data-template="case-analysis">
+                        <i class="fas fa-balance-scale-right"></i>
+                        Case Analysis
+                    </button>
+                    <button class="quick-action-btn" data-template="document-draft">
+                        <i class="fas fa-file-alt"></i>
+                        Document Draft
                     </button>
                 </div>
                 <div class="input-footer">
@@ -115,9 +147,27 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="legalSpecialty" class="form-label">
+                            <i class="fas fa-balance-scale"></i>
+                            Legal Specialization - تخصص حقوقی
+                        </label>
+                        <select id="legalSpecialty" class="form-input">
+                            <option value="general">General Legal Practice - حقوق عمومی</option>
+                            <option value="civil">Civil Law - حقوق مدنی</option>
+                            <option value="criminal">Criminal Law - حقوق جزا</option>
+                            <option value="commercial">Commercial Law - حقوق تجارت</option>
+                            <option value="administrative">Administrative Law - حقوق اداری</option>
+                            <option value="family">Family Law - حقوق خانواده</option>
+                            <option value="labor">Labor Law - حقوق کار</option>
+                            <option value="constitutional">Constitutional Law - حقوق اساسی</option>
+                        </select>
+                        <small class="form-help">Choose your legal specialization for more targeted assistance</small>
+                    </div>
+
+                    <div class="form-group">
                         <label for="temperatureSlider" class="form-label">
                             <i class="fas fa-thermometer-half"></i>
-                            Temperature: <span id="temperatureValue">0.7</span>
+                            Temperature: <span id="temperatureValue">0.3</span>
                         </label>
                         <input 
                             type="range" 
@@ -126,9 +176,9 @@
                             min="0" 
                             max="1" 
                             step="0.1" 
-                            value="0.7"
+                            value="0.3"
                         >
-                        <small class="form-help">Controls randomness in responses (0 = focused, 1 = creative)</small>
+                        <small class="form-help">Controls randomness in responses (0 = focused/legal precision, 1 = creative)</small>
                     </div>
 
                     <div class="form-group">
@@ -142,10 +192,10 @@
                             class="form-input" 
                             min="1" 
                             max="8192" 
-                            value="1024" 
-                            placeholder="1024"
+                            value="2048" 
+                            placeholder="2048"
                         >
-                        <small class="form-help">Maximum tokens in the response (1-8192)</small>
+                        <small class="form-help">Maximum tokens in the response (1-8192, higher values allow longer responses)</small>
                     </div>
                 </div>
 
@@ -179,11 +229,340 @@
                 <i class="fas fa-times"></i>
             </button>
         </div>
+
+        <!-- Contract Analysis Modal -->
+        <div id="contractAnalysisModal" class="modal hidden">
+            <div class="modal-overlay"></div>
+            <div class="modal-content contract-analysis-modal">
+                <div class="modal-header">
+                    <h2><i class="fas fa-file-contract"></i> Contract Analysis - تجزیه و تحلیل قرارداد</h2>
+                    <button id="closeContractAnalysisBtn" class="btn btn-ghost">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="contract-analysis-interface">
+                        <div class="upload-section">
+                            <h3><i class="fas fa-upload"></i> Upload Contract</h3>
+                            <div class="upload-area" id="contractUploadArea">
+                                <i class="fas fa-file-upload"></i>
+                                <p>Drag and drop contract file or click to browse</p>
+                                <input type="file" id="contractFileInput" accept=".txt,.pdf,.doc,.docx" hidden>
+                                <button class="btn btn-primary" onclick="document.getElementById('contractFileInput').click()">
+                                    <i class="fas fa-folder-open"></i> Browse Files
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="text-input-section">
+                            <h3><i class="fas fa-edit"></i> Or Paste Contract Text</h3>
+                            <textarea 
+                                id="contractTextInput" 
+                                class="contract-text-input" 
+                                placeholder="Paste your contract text here... / متن قرارداد خود را اینجا وارد کنید..."
+                                rows="10"
+                            ></textarea>
+                            <div class="contract-options">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="includeRiskAnalysis" checked>
+                                    <span>Include Risk Analysis - شامل ارزیابی ریسک</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="includeLegalValidation" checked>
+                                    <span>Legal Validation - اعتبارسنجی حقوقی</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="includeImprovements" checked>
+                                    <span>Improvement Suggestions - پیشنهادات بهبود</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button id="analyzeContractBtn" class="btn btn-primary">
+                        <i class="fas fa-search"></i>
+                        Analyze Contract
+                    </button>
+                    <button id="closeContractAnalysisFooterBtn" class="btn btn-secondary">
+                        <i class="fas fa-times"></i>
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Case Law Search Modal -->
+        <div id="caseLawModal" class="modal hidden">
+            <div class="modal-overlay"></div>
+            <div class="modal-content case-law-modal">
+                <div class="modal-header">
+                    <h2><i class="fas fa-balance-scale"></i> Case Law & Precedents - رویه قضایی و سوابق</h2>
+                    <button id="closeCaseLawBtn" class="btn btn-ghost">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="case-search-interface">
+                        <div class="search-section">
+                            <div class="search-input-group">
+                                <input type="text" id="caseSearchInput" class="form-input" placeholder="Search cases, precedents, or legal topics... / جستجوی پرونده‌ها، سوابق یا موضوعات حقوقی...">
+                                <button id="searchCasesBtn" class="btn btn-primary">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="search-filters">
+                                <select id="courtFilter" class="form-input">
+                                    <option value="all">All Courts - همه دادگاه‌ها</option>
+                                    <option value="supreme">Supreme Court - دیوان عالی کشور</option>
+                                    <option value="appeal">Appeal Courts - دادگاه تجدیدنظر</option>
+                                    <option value="civil">Civil Courts - دادگاه مدنی</option>
+                                    <option value="criminal">Criminal Courts - دادگاه کیفری</option>
+                                    <option value="administrative">Administrative Court - دیوان عدالت اداری</option>
+                                </select>
+                                
+                                <select id="yearFilter" class="form-input">
+                                    <option value="all">All Years - همه سال‌ها</option>
+                                    <option value="1403">1403</option>
+                                    <option value="1402">1402</option>
+                                    <option value="1401">1401</option>
+                                    <option value="1400">1400</option>
+                                    <option value="1399">1399</option>
+                                </select>
+                                
+                                <select id="categoryFilter" class="form-input">
+                                    <option value="all">All Categories - همه دسته‌ها</option>
+                                    <option value="civil">Civil - مدنی</option>
+                                    <option value="criminal">Criminal - کیفری</option>
+                                    <option value="commercial">Commercial - تجاری</option>
+                                    <option value="family">Family - خانواده</option>
+                                    <option value="administrative">Administrative - اداری</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div id="caseSearchResults" class="case-results">
+                            <div class="no-results">
+                                <i class="fas fa-search"></i>
+                                <p>Enter search terms to find relevant cases and precedents</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button id="closeCaseLawFooterBtn" class="btn btn-secondary">
+                        <i class="fas fa-times"></i>
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Legal Calendar Modal -->
+        <div id="legalCalendarModal" class="modal hidden">
+            <div class="modal-overlay"></div>
+            <div class="modal-content legal-calendar-modal">
+                <div class="modal-header">
+                    <h2><i class="fas fa-calendar-alt"></i> Legal Calendar - تقویم حقوقی</h2>
+                    <button id="closeLegalCalendarBtn" class="btn btn-ghost">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="calendar-interface">
+                        <div class="calendar-navigation">
+                            <button id="prevMonthBtn" class="btn btn-ghost">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <h3 id="currentMonthYear">Current Month Year</h3>
+                            <button id="nextMonthBtn" class="btn btn-ghost">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="calendar-tabs">
+                            <button class="calendar-tab active" data-tab="deadlines">
+                                <i class="fas fa-clock"></i>
+                                Deadlines - مهلت‌ها
+                            </button>
+                            <button class="calendar-tab" data-tab="court-dates">
+                                <i class="fas fa-gavel"></i>
+                                Court Dates - جلسات دادگاه
+                            </button>
+                            <button class="calendar-tab" data-tab="holidays">
+                                <i class="fas fa-star"></i>
+                                Legal Holidays - تعطیلات قضایی
+                            </button>
+                        </div>
+                        
+                        <div class="calendar-content">
+                            <div id="deadlinesTab" class="calendar-tab-content active">
+                                <div class="deadline-calculator">
+                                    <h4>محاسبه مهلت - Deadline Calculator</h4>
+                                    <div class="deadline-form">
+                                        <div class="form-group">
+                                            <label>Procedure Type - نوع رویه:</label>
+                                            <select id="procedureType" class="form-input">
+                                                <option value="appeal">تجدیدنظرخواهی - Appeal (20 days)</option>
+                                                <option value="cassation">فراجام‌خواهی - Cassation (20 days)</option>
+                                                <option value="objection">اعتراض - Objection (10 days)</option>
+                                                <option value="response">پاسخ دادخواست - Response (30 days)</option>
+                                                <option value="evidence">ارائه مدارک - Evidence (15 days)</option>
+                                                <option value="execution">اجرای حکم - Execution (30 days)</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Start Date - تاریخ شروع:</label>
+                                            <input type="date" id="startDate" class="form-input">
+                                        </div>
+                                        <button id="calculateDeadlineBtn" class="btn btn-primary">
+                                            <i class="fas fa-calculator"></i>
+                                            Calculate - محاسبه
+                                        </button>
+                                    </div>
+                                    <div id="deadlineResult" class="deadline-result hidden">
+                                        <!-- Deadline calculation results will appear here -->
+                                    </div>
+                                </div>
+                                
+                                <div class="upcoming-deadlines">
+                                    <h4>Upcoming Deadlines - مهلت‌ای پیش رو</h4>
+                                    <div id="upcomingDeadlinesList" class="deadlines-list">
+                                        <p class="no-deadlines">No upcoming deadlines. Add deadlines using the calculator above.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div id="courtDatesTab" class="calendar-tab-content">
+                                <div class="court-session-tracker">
+                                    <h4>Court Sessions - جلسات دادگاه</h4>
+                                    <div class="court-form">
+                                        <div class="form-group">
+                                            <label>Court Name - نام دادگاه:</label>
+                                            <input type="text" id="courtName" class="form-input" placeholder="e.g., دادگاه عمومی تهران">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Case Number - شماره پرونده:</label>
+                                            <input type="text" id="caseNumber" class="form-input" placeholder="e.g., 1403-123-456">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Hearing Date - تاریخ جلسه:</label>
+                                            <input type="datetime-local" id="hearingDate" class="form-input">
+                                        </div>
+                                        <button id="addCourtDateBtn" class="btn btn-primary">
+                                            <i class="fas fa-plus"></i>
+                                            Add Court Date - افزودن جلسه
+                                        </button>
+                                    </div>
+                                    
+                                    <div id="courtDatesList" class="court-dates-list">
+                                        <p class="no-court-dates">No court dates scheduled. Add court dates using the form above.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div id="holidaysTab" class="calendar-tab-content">
+                                <div class="legal-holidays">
+                                    <h4>Iranian Legal Holidays - تعطیلات قضایی ایران</h4>
+                                    <div id="holidaysList" class="holidays-list">
+                                        <!-- Legal holidays will be populated here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button id="closeLegalCalendarFooterBtn" class="btn btn-secondary">
+                        <i class="fas fa-times"></i>
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="legalToolsModal" class="modal hidden">
+            <div class="modal-overlay"></div>
+            <div class="modal-content legal-tools-modal">
+                <div class="modal-header">
+                    <h2><i class="fas fa-gavel"></i> Legal Tools - ابزارهای حقوقی</h2>
+                    <button id="closeLegalToolsBtn" class="btn btn-ghost">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="legal-tools-grid">
+                        <div class="tool-category">
+                            <h3><i class="fas fa-book-open"></i> Iranian Legal Codes</h3>
+                            <div class="tool-buttons">
+                                <button class="tool-btn" data-code="civil">Civil Code - قانون مدنی</button>
+                                <button class="tool-btn" data-code="criminal">Criminal Code - قانون مجازات اسلامی</button>
+                                <button class="tool-btn" data-code="commercial">Commercial Code - قانون تجارت</button>
+                                <button class="tool-btn" data-code="procedure">Civil Procedure - آیین دادرسی مدنی</button>
+                            </div>
+                        </div>
+                        
+                        <div class="tool-category">
+                            <h3><i class="fas fa-file-alt"></i> Document Templates</h3>
+                            <div class="tool-buttons">
+                                <button class="tool-btn" data-template="contract">Contract - قرارداد</button>
+                                <button class="tool-btn" data-template="power-of-attorney">Power of Attorney - وکالت‌نامه</button>
+                                <button class="tool-btn" data-template="complaint">Complaint - دادخواست</button>
+                                <button class="tool-btn" data-template="appeal">Appeal - اعتراض</button>
+                            </div>
+                        </div>
+                        
+                        <div class="tool-category">
+                            <h3><i class="fas fa-calculator"></i> Legal Calculators</h3>
+                            <div class="tool-buttons">
+                                <button class="tool-btn" data-calc="damage">Damage Calculator - محاسبه خسارت</button>
+                                <button class="tool-btn" data-calc="court-fees">Court Fees - هزینه دادرسی</button>
+                                <button class="tool-btn" data-calc="deadline">Deadline Calculator - محاسبه مهلت</button>
+                            </div>
+                        </div>
+                        
+                        <div class="tool-category">
+                            <h3><i class="fas fa-search"></i> Legal Research</h3>
+                            <div class="tool-buttons">
+                                <button class="tool-btn" data-research="precedent">Case Precedents - سوابق قضایی</button>
+                                <button class="tool-btn" data-research="law-search">Law Search - جستجوی قانون</button>
+                                <button class="tool-btn" data-research="regulation">Regulations - آیین‌نامه‌ها</button>
+                            </div>
+                        </div>
+                        
+                        <div class="tool-category">
+                            <h3><i class="fas fa-file-contract"></i> Contract Analysis</h3>
+                            <div class="tool-buttons">
+                                <button class="tool-btn" data-contract="analyze">Analyze Contract - تجزیه و تحلیل قرارداد</button>
+                                <button class="tool-btn" data-contract="review">Contract Review - بررسی قرارداد</button>
+                                <button class="tool-btn" data-contract="validate">Validate Terms - اعتبارسنجی شرایط</button>
+                                <button class="tool-btn" data-contract="risk">Risk Assessment - ارزیابی ریسک</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button id="closeLegalToolsFooterBtn" class="btn btn-secondary">
+                        <i class="fas fa-times"></i>
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Scripts -->
     <script src="gemini-api.js"></script>
     <script src="storage.js"></script>
+    <script src="legal-assistant.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

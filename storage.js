@@ -12,10 +12,11 @@ class StorageManager {
         };
         
         this.defaultSettings = {
-            temperature: 0.7,
-            maxTokens: 1024,
+            temperature: 0.3, // Lower for legal precision
+            maxTokens: 2048, // Increased for longer legal responses
             autoSave: true,
-            theme: 'light'
+            theme: 'light',
+            legalSpecialty: 'general'
         };
     }
 
