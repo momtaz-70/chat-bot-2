@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini Chatbot</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div id="app" class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1 class="title">
+                        <i class="fas fa-robot"></i>
+                        Gemini Chatbot
+                    </h1>
+                    <span class="model-badge">2.5 Flash</span>
+                </div>
+                <div class="header-right">
+                    <button id="settingsBtn" class="btn btn-secondary" title="Settings">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                    <button id="clearChatBtn" class="btn btn-secondary" title="Clear Chat">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Chat Container -->
+        <main class="chat-container">
+            <div id="messagesContainer" class="messages-container">
+                <div class="welcome-message">
+                    <i class="fas fa-robot welcome-icon"></i>
+                    <h2>Welcome to Gemini Chatbot</h2>
+                    <p>I'm powered by Google's Gemini 2.5 Flash model. To get started, please configure your API key in the settings.</p>
+                    <button id="configureBtn" class="btn btn-primary">
+                        <i class="fas fa-key"></i>
+                        Configure API Key
+                    </button>
+                </div>
+            </div>
+
+            <!-- Loading Indicator -->
+            <div id="loadingIndicator" class="loading-indicator hidden">
+                <div class="loading-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <span>Gemini is thinking...</span>
+            </div>
+
+            <!-- Message Input -->
+            <div class="message-input-container">
+                <div class="message-input-wrapper">
+                    <textarea 
+                        id="messageInput" 
+                        class="message-input" 
+                        placeholder="Type your message here... (Press Enter to send, Shift+Enter for new line)"
+                        rows="1"
+                        disabled
+                    ></textarea>
+                    <button id="sendBtn" class="send-btn" disabled title="Send Message">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                <div class="input-footer">
+                    <span id="charCount" class="char-count">0 / 4000</span>
+                    <div class="api-status">
+                        <span id="apiStatus" class="api-status-text">No API Key</span>
+                        <span id="apiStatusIcon" class="api-status-icon">
+                            <i class="fas fa-times-circle text-error"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Settings Modal -->
+        <div id="settingsModal" class="modal hidden">
+            <div class="modal-overlay"></div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-cog"></i> Settings</h2>
+                    <button id="closeModalBtn" class="btn btn-ghost">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="apiKeyInput" class="form-label">
+                            <i class="fas fa-key"></i>
+                            Gemini API Key
+                        </label>
+                        <div class="input-group">
+                            <input 
+                                type="password" 
+                                id="apiKeyInput" 
+                                class="form-input" 
+                                placeholder="Enter your Gemini API key..."
+                            >
+                            <button id="toggleApiKeyVisibility" class="btn btn-ghost" type="button">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <small class="form-help">
+                            Get your API key from <a href="https://aistudio.google.com/app/apikey" target="_blank">Google AI Studio</a>
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="temperatureSlider" class="form-label">
+                            <i class="fas fa-thermometer-half"></i>
+                            Temperature: <span id="temperatureValue">0.7</span>
+                        </label>
+                        <input 
+                            type="range" 
+                            id="temperatureSlider" 
+                            class="form-slider" 
+                            min="0" 
+                            max="1" 
+                            step="0.1" 
+                            value="0.7"
+                        >
+                        <small class="form-help">Controls randomness in responses (0 = focused, 1 = creative)</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="maxTokensInput" class="form-label">
+                            <i class="fas fa-bars"></i>
+                            Max Tokens
+                        </label>
+                        <input 
+                            type="number" 
+                            id="maxTokensInput" 
+                            class="form-input" 
+                            min="1" 
+                            max="8192" 
+                            value="1024" 
+                            placeholder="1024"
+                        >
+                        <small class="form-help">Maximum tokens in the response (1-8192)</small>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button id="testConnectionBtn" class="btn btn-secondary">
+                        <i class="fas fa-wifi"></i>
+                        Test Connection
+                    </button>
+                    <button id="saveSettingsBtn" class="btn btn-primary">
+                        <i class="fas fa-save"></i>
+                        Save Settings
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error Toast -->
+        <div id="errorToast" class="toast toast-error hidden">
+            <i class="fas fa-exclamation-circle"></i>
+            <span id="errorMessage">An error occurred</span>
+            <button id="closeErrorBtn" class="toast-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <!-- Success Toast -->
+        <div id="successToast" class="toast toast-success hidden">
+            <i class="fas fa-check-circle"></i>
+            <span id="successMessage">Success!</span>
+            <button id="closeSuccessBtn" class="toast-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="gemini-api.js"></script>
+    <script src="storage.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
