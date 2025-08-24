@@ -20,44 +20,44 @@ class LegalAssistant {
     initializeLegalCodes() {
         return {
             civil: {
-                name: 'قانون مدنی - Civil Code',
-                description: 'Iranian Civil Code',
+                name: 'قانون مدنی',
+                description: 'قانون مدنی ایران',
                 articles: 1223,
                 url: 'http://rc.majlis.ir/fa/law/show/90130'
             },
             criminal: {
-                name: 'قانون مجازات اسلامی - Criminal Code',
-                description: 'Islamic Criminal Code of Iran',
+                name: 'قانون مجازات اسلامی',
+                description: 'قانون مجازات اسلامی ایران',
                 articles: 738,
                 url: 'http://rc.majlis.ir/fa/law/show/845048'
             },
             commercial: {
-                name: 'قانون تجارت - Commercial Code',
-                description: 'Iranian Commercial Code',
+                name: 'قانون تجارت',
+                description: 'قانون تجارت ایران',
                 articles: 333,
                 url: 'http://rc.majlis.ir/fa/law/show/90133'
             },
             procedure: {
-                name: 'آیین دادرسی مدنی - Civil Procedure Code',
-                description: 'Iranian Civil Procedure Code',
+                name: 'آیین دادرسی مدنی',
+                description: 'آیین دادرسی مدنی ایران',
                 articles: 518,
                 url: 'http://rc.majlis.ir/fa/law/show/132608'
             },
             criminal_procedure: {
-                name: 'آیین دادرسی کیفری - Criminal Procedure Code',
-                description: 'Iranian Criminal Procedure Code',
+                name: 'آیین دادرسی کیفری',
+                description: 'آیین دادرسی کیفری ایران',
                 articles: 588,
                 url: 'http://rc.majlis.ir/fa/law/show/845063'
             },
             family: {
-                name: 'قانون حمایت خانواده - Family Protection Law',
-                description: 'Iranian Family Protection Law',
+                name: 'قانون حمایت خانواده',
+                description: 'قانون حمایت خانواده ایران',
                 articles: 41,
                 url: 'http://rc.majlis.ir/fa/law/show/1020475'
             },
             labor: {
-                name: 'قانون کار - Labor Law',
-                description: 'Iranian Labor Law',
+                name: 'قانون کار',
+                description: 'قانون کار ایران',
                 articles: 190,
                 url: 'http://rc.majlis.ir/fa/law/show/90147'
             }
@@ -70,7 +70,7 @@ class LegalAssistant {
     initializeDocumentTemplates() {
         return {
             contract: {
-                name: 'قرارداد - Contract',
+                name: 'قرارداد',
                 template: `قرارداد [نوع قرارداد]
 
 طرفین قرارداد:
@@ -96,7 +96,7 @@ class LegalAssistant {
 امضای طرفین`
             },
             power_of_attorney: {
-                name: 'وکالت‌نامه - Power of Attorney',
+                name: 'وکالت‌نامه',
                 template: `وکالت‌نامه
 
 من [نام و مشخصات موکل] ساکن [آدرس] به موجب این وکالت‌نامه آقای/خانم [نام و مشخصات وکیل] ساکن [آدرس] را برای انجام امور ذیل وکیل می‌نمایم:
@@ -111,7 +111,7 @@ class LegalAssistant {
 امضای وکیل: [امضا]`
             },
             complaint: {
-                name: 'دادخواست - Legal Complaint',
+                name: 'دادخواست',
                 template: `دادخواست
 
 به دادگاه محترم [نوع دادگاه] [شهر]
@@ -134,7 +134,7 @@ class LegalAssistant {
 امضای خواهان یا وکیل`
             },
             appeal: {
-                name: 'اعتراض - Appeal',
+                name: 'اعتراض',
                 template: `اعتراض به رای صادره
 
 به دادگاه محترم [دادگاه تجدیدنظر]
@@ -161,7 +161,7 @@ class LegalAssistant {
     initializeLegalPrompts() {
         return {
             'contract-review': {
-                title: 'بررسی قرارداد - Contract Review',
+                title: 'بررسی قرارداد',
                 prompt: `من یک وکیل حقوق تجارت هستم و نیاز به بررسی قرارداد دارم. لطفاً قرارداد زیر را از نظر حقوقی بررسی کنید و نکات مهم، خلاءهای قانونی، و پیشنهادات اصلاحی را ارائه دهید:
 
 [متن قرارداد]
@@ -174,7 +174,7 @@ class LegalAssistant {
 5. پیشنهادات اصلاحی`
             },
             'legal-research': {
-                title: 'تحقیق حقوقی - Legal Research',
+                title: 'تحقیق حقوقی',
                 prompt: `من یک وکیل دادگستری هستم و نیاز به تحقیق در موضوع حقوقی زیر دارم:
 
 موضوع: [موضوع تحقیق]
@@ -187,7 +187,7 @@ class LegalAssistant {
 5. استراتژی حقوقی پیشنهادی`
             },
             'case-analysis': {
-                title: 'تحلیل پرونده - Case Analysis',
+                title: 'تحلیل پرونده',
                 prompt: `من یک وکیل هستم و نیاز به تحلیل پرونده زیر دارم:
 
 خلاصه پرونده: [خلاصه موضوع]
@@ -200,7 +200,7 @@ class LegalAssistant {
 5. توصیه‌های عملی برای پیگیری`
             },
             'document-draft': {
-                title: 'تنظیم سند - Document Drafting',
+                title: 'تنظیم سند',
                 prompt: `من نیاز به تنظیم سند حقوقی زیر دارم:
 
 نوع سند: [نوع سند]
@@ -222,7 +222,7 @@ class LegalAssistant {
     initializeIranianLaws() {
         return {
             'inheritance': {
-                title: 'قوانین ارث - Inheritance Laws',
+                title: 'قوانین ارث',
                 summary: 'قوانین مربوط به ارث در حقوق ایران بر اساس احکام اسلامی تنظیم شده است.',
                 key_articles: ['869 تا 948 قانون مدنی'],
                 important_notes: [
@@ -232,7 +232,7 @@ class LegalAssistant {
                 ]
             },
             'property': {
-                title: 'حق مالکیت - Property Rights',
+                title: 'حق مالکیت',
                 summary: 'قوانین مالکیت در ایران شامل انواع مختلف مالکیت و روش‌های انتقال',
                 key_articles: ['30 تا 139 قانون مدنی'],
                 important_notes: [
@@ -242,7 +242,7 @@ class LegalAssistant {
                 ]
             },
             'contracts': {
-                title: 'عقود و قراردادها - Contracts',
+                title: 'عقود و قراردادها',
                 summary: 'قوانین عقود در حقوق ایران بر اساس اصول اسلامی و عرف',
                 key_articles: ['183 تا 308 قانون مدنی'],
                 important_notes: [

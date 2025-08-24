@@ -41,7 +41,7 @@ class ChatbotApp {
             console.log('🖼️ Updating UI...');
             this.updateUI();
             
-            console.log('✅ Legal AI Assistant ready!');
+        console.log('✅ دستیار هوش مصنوعی حقوقی آماده است!');
         } catch (error) {
             console.error('❌ Error during initialization:', error);
             throw error;
@@ -113,7 +113,7 @@ class ChatbotApp {
                 console.warn('⚠️ Missing DOM elements:', missingElements);
             }
             
-            console.log('✅ DOM elements bound successfully');
+        console.log('✅ اتصال عناصر DOM با موفقیت برقرار شد');
             
         } catch (error) {
             console.error('❌ Error binding DOM elements:', error);
@@ -270,12 +270,12 @@ class ChatbotApp {
      */
     updateApiStatus() {
         if (this.state.apiKeyConfigured && this.geminiAPI.isReady()) {
-            this.elements.apiStatus.textContent = 'Connected';
+            this.elements.apiStatus.textContent = 'متصل';
             this.elements.apiStatusIcon.innerHTML = '<i class="fas fa-check-circle text-success"></i>';
             this.elements.messageInput.disabled = false;
             this.elements.sendBtn.disabled = false;
         } else {
-            this.elements.apiStatus.textContent = 'No API Key';
+            this.elements.apiStatus.textContent = 'بدون کلید API';
             this.elements.apiStatusIcon.innerHTML = '<i class="fas fa-times-circle text-error"></i>';
             this.elements.messageInput.disabled = true;
             this.elements.sendBtn.disabled = true;
@@ -291,16 +291,16 @@ class ChatbotApp {
             this.elements.messagesContainer.innerHTML = `
                 <div class="welcome-message">
                     <i class="fas fa-balance-scale welcome-icon"></i>
-                    <h2>Legal AI Assistant for Iranian Lawyers</h2>
+                    <h2>دستیار هوش مصنوعی برای وکلای ایرانی</h2>
                     <h3 class="persian-welcome">دستیار هوش مصنوعی برای وکلای ایرانی</h3>
-                    <p>Specialized AI assistant for Iranian legal practice. ${this.state.apiKeyConfigured ? 'Ask me about Iranian law, legal procedures, document drafting...' : 'To get started, please configure your API key in the settings.'}</p>
+                    <p>دستیار هوش مصنوعی تخصصی برای وکلای ایرانی. ${this.state.apiKeyConfigured ? 'در مورد قوانین ایران، رویه‌های حقوقی، تنظیم اسناد بپرسید...' : 'برای شروع، لطفاً کلید API خود را در تنظیمات پیکربندی کنید.'}</p>
                     <div class="legal-specialties">
                         <span class="specialty-badge">Civil Law - حقوق مدنی</span>
                         <span class="specialty-badge">Criminal Law - حقوق جزا</span>
                         <span class="specialty-badge">Commercial Law - حقوق تجارت</span>
                         <span class="specialty-badge">Administrative Law - حقوق اداری</span>
                     </div>
-                    ${!this.state.apiKeyConfigured ? '<button id="configureBtn" class="btn btn-primary"><i class="fas fa-key"></i> Configure API Key</button>' : ''}
+                    ${!this.state.apiKeyConfigured ? '<button id="configureBtn" class="btn btn-primary"><i class="fas fa-key"></i> تنظیم کلید API</button>' : ''}
                 </div>
             `;
             
@@ -345,7 +345,7 @@ class ChatbotApp {
                     <div class="message-timestamp">${timestamp}</div>
                     ${!isUser ? `
                         <div class="message-actions">
-                            <button class="message-action-btn copy-btn" title="Copy message">
+                            <button class="message-action-btn copy-btn" title="کپی پیام">
                                 <i class="fas fa-copy"></i>
                             </button>
                         </div>
@@ -393,10 +393,10 @@ class ChatbotApp {
     async copyToClipboard(text) {
         try {
             await navigator.clipboard.writeText(text);
-            this.showSuccessToast('Message copied to clipboard!');
+            this.showSuccessToast('پیام کپی شد!');
         } catch (error) {
             console.error('Failed to copy text:', error);
-            this.showErrorToast('Failed to copy message');
+            this.showErrorToast('کپی پیام ناموفق بود');
         }
     }
 
@@ -473,14 +473,14 @@ class ChatbotApp {
         }
 
         if (!this.state.apiKeyConfigured) {
-            this.showErrorToast('Please configure your API key first');
+            this.showErrorToast('لطفاً ابتدا کلید API خود را پیکربندی کنید');
             this.openSettings();
             return;
         }
 
         if (!this.rateLimiter.canMakeRequest()) {
             const waitTime = Math.ceil(this.rateLimiter.getTimeToWait() / 1000);
-            this.showErrorToast(`Rate limit exceeded. Please wait ${waitTime} seconds.`);
+            this.showErrorToast(`حد مجاز درخواست رد شد. لطفاً ${waitTime} ثانیه صبر کنید.`);
             return;
         }
 
@@ -585,12 +585,12 @@ class ChatbotApp {
      * Clear chat history
      */
     clearChat() {
-        if (confirm('Are you sure you want to clear the chat history?')) {
+        if (confirm('آیا مطمئن هستید که می‌خواهید تاریخچه گفتگو را پاک کنید؟')) {
             this.state.messages = [];
             this.storage.clearChatHistory();
             this.messageIdCounter = 0;
             this.updateUI();
-            this.showSuccessToast('Chat history cleared');
+            this.showSuccessToast('تاریخچه گفتگو پاک شد');
         }
     }
 
@@ -640,7 +640,7 @@ class ChatbotApp {
         const apiKey = this.elements.apiKeyInput.value.trim();
         
         if (!apiKey) {
-            this.showErrorToast('Please enter an API key first');
+            this.showErrorToast('لطفاً ابتدا یک کلید API وارد کنید');
             return;
         }
 
@@ -651,7 +651,7 @@ class ChatbotApp {
             const result = await this.geminiAPI.testConnection(apiKey);
             
             if (result.success) {
-                this.showSuccessToast('Connection successful!');
+                this.showSuccessToast('اتصال موفق!');
             } else {
                 this.showErrorToast(result.message);
             }
@@ -713,7 +713,7 @@ class ChatbotApp {
 
         this.closeSettings();
         this.updateUI();
-        this.showSuccessToast('Settings saved successfully!');
+        this.showSuccessToast('تنظیمات با موفقیت ذخیره شد!');
     }
 
     /**
@@ -866,7 +866,7 @@ class ChatbotApp {
     insertDocumentTemplate(templateId) {
         const template = this.legalAssistant.getDocumentTemplate(templateId);
         if (template) {
-            const prompt = `Please help me draft a ${template.name}. Here's the template structure I'd like to use:\n\n${template.template}\n\nPlease customize this template for my specific needs.`;
+            const prompt = `لطفاً در تهیه ${template.name} به من کمک کنید. در اینجا ساختار قالبی که می‌خواهم استفاده کنم آورده شده است:\n\n${template.template}\n\nلطفاً این قالب را متناسب با نیازهای خاص من سفارشی کنید.`;
             this.elements.messageInput.value = prompt;
             this.state.currentMessage = prompt;
             this.updateInputState();
@@ -882,7 +882,7 @@ class ChatbotApp {
     showLegalCode(codeId) {
         const code = this.legalAssistant.getLegalCodeInfo(codeId);
         if (code) {
-            const prompt = `Tell me about ${code.name}. Please provide an overview, key articles, and recent important updates or interpretations.`;
+            const prompt = `در مورد ${code.name} به من بگوییح. لطفاً یک بررسی کلی، مواد کلیدی، و آخرین به‌روزرسانی‌ها یا تفاسیر مهم ارائه دهید.`;
             this.elements.messageInput.value = prompt;
             this.state.currentMessage = prompt;
             this.updateInputState();
@@ -899,13 +899,13 @@ class ChatbotApp {
         let prompt = '';
         switch (calcType) {
             case 'damage':
-                prompt = 'Please help me calculate damages for a legal case. I need assistance with determining compensation amounts based on Iranian law.';
+                prompt = 'لطفاً در محاسبه خسارت برای یک پرونده حقوقی به من کمک کنید. برای تعیین میزان جبران خسارت بر اساس قوانین ایران راهنمایی نیاز دارم.';
                 break;
             case 'court-fees':
-                prompt = 'Please help me calculate court fees for filing a case in Iranian courts. I need to know the filing fees and associated costs.';
+                prompt = 'لطفاً در محاسبه هزینه دادرسی برای طرح پرونده در دادگاه‌های ایران به من کمک کنید. نیاز دارم هزینه ثبت پرونده و هزینه‌های مرتبط را بدانم.';
                 break;
             case 'deadline':
-                prompt = 'Please help me calculate legal deadlines for my case. I need to know important dates and filing deadlines under Iranian procedural law.';
+                prompt = 'لطفاً در محاسبه مهلت‌های حقوقی برای پرونده من به من کمک کنید. نیاز دارم تاریخ‌های مهم و مهلت‌های ارائه بر اساس قوانین آیین دادرسی ایران را بدانم.';
                 break;
         }
         
@@ -929,10 +929,10 @@ class ChatbotApp {
                 this.openCaseLawSearch();
                 return;
             case 'law-search':
-                prompt = 'I need to research specific Iranian laws and regulations. Please help me find and understand the relevant legal provisions.';
+                prompt = 'نیاز دارم قوانین و مقررات خاص ایران را بررسی کنم. لطفاً در یافتن و درک مفاد حقوقی مربوط به من کمک کنید.';
                 break;
             case 'regulation':
-                prompt = 'I need information about Iranian regulations and administrative rules. Please help me understand the applicable regulations.';
+                prompt = 'نیاز دارم اطلاعاتی در مورد مقررات ایران و قواعد اداری داشته باشم. لطفاً در درک مقررات قابل اعمال به من کمک کنید.';
                 break;
         }
         
@@ -1129,7 +1129,7 @@ ChatbotApp.prototype.displayCaseLawResults = function(results) {
         resultsContainer.innerHTML = `
             <div class="no-results">
                 <i class="fas fa-search"></i>
-                <p>No cases found matching your search criteria</p>
+                <p>هیچ پرونده‌ای مطابق با معیارهای جستجوی شما یافت نشد</p>
             </div>
         `;
         return;
@@ -1166,8 +1166,8 @@ ChatbotApp.prototype.selectCase = function(caseId) {
 
 ChatbotApp.prototype.initializeLegalCalendar = function() {
     const currentDate = new Date();
-    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
-                      'July', 'August', 'September', 'October', 'November', 'December'];
+    const monthNames = ['ژانویه', 'فوریه', 'مارس', 'آوریل', 'مه', 'ژوئن',
+                      'ژوئیه', 'آگوست', 'سپتامبر', 'اکتبر', 'نوامبر', 'دسامبر'];
     
     document.getElementById('currentMonthYear').textContent = 
         `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
@@ -1188,7 +1188,7 @@ ChatbotApp.prototype.calculateDeadline = function() {
     const startDate = document.getElementById('startDate').value;
     
     if (!startDate) {
-        this.showErrorToast('Please select a start date');
+        this.showErrorToast('لطفاً تاریخ شروع را انتخاب کنید');
         return;
     }
     
@@ -1198,10 +1198,10 @@ ChatbotApp.prototype.calculateDeadline = function() {
         const resultElement = document.getElementById('deadlineResult');
         resultElement.innerHTML = `
             <h5>${deadline.description}</h5>
-            <p><strong>Start Date:</strong> ${deadline.startDate}</p>
-            <p><strong>End Date:</strong> ${deadline.endDate}</p>
-            <p><strong>Days:</strong> ${deadline.days}</p>
-            <p><strong>Remaining:</strong> ${deadline.remainingDays > 0 ? deadline.remainingDays + ' days' : 'Deadline passed'}</p>
+            <p><strong>تاریخ شروع:</strong> ${deadline.startDate}</p>
+            <p><strong>تاریخ پایان:</strong> ${deadline.endDate}</p>
+            <p><strong>روزها:</strong> ${deadline.days}</p>
+            <p><strong>باقیمانده:</strong> ${deadline.remainingDays > 0 ? deadline.remainingDays + ' روز' : 'مهلت گذشته'}</p>
         `;
         resultElement.classList.remove('hidden');
         
@@ -1216,7 +1216,7 @@ ChatbotApp.prototype.addCourtDate = function() {
     const hearingDate = document.getElementById('hearingDate').value;
     
     if (!courtName || !caseNumber || !hearingDate) {
-        this.showErrorToast('Please fill all fields');
+        this.showErrorToast('لطفاً تمام فیلدها را پر کنید');
         return;
     }
     
@@ -1235,7 +1235,7 @@ ChatbotApp.prototype.addCourtDate = function() {
     document.getElementById('caseNumber').value = '';
     document.getElementById('hearingDate').value = '';
     
-    this.showSuccessToast('Court date added successfully');
+    this.showSuccessToast('جلسه دادگاه با موفقیت اضافه شد');
 };
 
 ChatbotApp.prototype.switchCalendarTab = function(tabName) {
@@ -1255,7 +1255,7 @@ ChatbotApp.prototype.loadUpcomingDeadlines = function() {
     const container = document.getElementById('upcomingDeadlinesList');
     
     if (deadlines.length === 0) {
-        container.innerHTML = '<p class="no-deadlines">No upcoming deadlines. Add deadlines using the calculator above.</p>';
+        container.innerHTML = '<p class="no-deadlines">هیچ مهلتی پیش رو نیست. با استفاده از ماشین حساب بالا مهلت اضافه کنید.</p>';
         return;
     }
     
@@ -1264,7 +1264,7 @@ ChatbotApp.prototype.loadUpcomingDeadlines = function() {
         .sort((a, b) => new Date(a.endDate) - new Date(b.endDate));
     
     if (upcomingDeadlines.length === 0) {
-        container.innerHTML = '<p class="no-deadlines">No upcoming deadlines.</p>';
+        container.innerHTML = '<p class="no-deadlines">هیچ مهلتی پیش رو نیست.</p>';
         return;
     }
     
@@ -1279,7 +1279,7 @@ ChatbotApp.prototype.loadUpcomingDeadlines = function() {
                     <div class="deadline-date">${deadline.endDate}</div>
                 </div>
                 <div class="deadline-remaining ${urgencyClass}">
-                    ${daysRemaining > 0 ? daysRemaining + ' days' : 'Overdue'}
+                    ${daysRemaining > 0 ? daysRemaining + ' روز' : 'گذشته'}
                 </div>
             </div>
         `;
@@ -1293,7 +1293,7 @@ ChatbotApp.prototype.loadCourtDates = function() {
     const container = document.getElementById('courtDatesList');
     
     if (courtDates.length === 0) {
-        container.innerHTML = '<p class="no-court-dates">No court dates scheduled. Add court dates using the form above.</p>';
+        container.innerHTML = '<p class="no-court-dates">هیچ جلسه دادگاهی برنامه‌ریزی نشده. با استفاده از فرم بالا جلسه اضافه کنید.</p>';
         return;
     }
     
@@ -1305,13 +1305,13 @@ ChatbotApp.prototype.loadCourtDates = function() {
         <div class="court-date-item">
             <div class="deadline-info">
                 <div class="deadline-title">${courtDate.courtName}</div>
-                <div class="deadline-date">Case: ${courtDate.caseNumber}</div>
+                <div class="deadline-date">پرونده: ${courtDate.caseNumber}</div>
                 <div class="deadline-date">${new Date(courtDate.hearingDate).toLocaleString()}</div>
             </div>
         </div>
     `).join('');
     
-    container.innerHTML = datesHTML || '<p class="no-court-dates">No upcoming court dates.</p>';
+    container.innerHTML = datesHTML || '<p class="no-court-dates">هیچ جلسه دادگاهی پیش رو نیست.</p>';
 };
 
 ChatbotApp.prototype.loadLegalHolidays = function() {

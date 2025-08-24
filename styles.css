@@ -148,7 +148,7 @@ body {
     gap: var(--space-2);
 }
 
-/* Main Chat Container */
+/* Chat Container RTL Support */
 .chat-container {
     flex: 1;
     display: flex;
@@ -158,6 +158,7 @@ body {
     width: 100%;
     padding: 0 var(--space-6);
     overflow: hidden;
+    direction: rtl;
 }
 
 .messages-container {
@@ -165,6 +166,7 @@ body {
     overflow-y: auto;
     padding: var(--space-6) 0;
     scroll-behavior: smooth;
+    direction: rtl;
 }
 
 /* Legal Specialties */
@@ -625,6 +627,8 @@ body {
     font-weight: 600;
     color: var(--gray-900);
     margin-bottom: var(--space-2);
+    direction: rtl;
+    text-align: center;
 }
 
 .welcome-message p {
@@ -632,6 +636,8 @@ body {
     max-width: 500px;
     margin-left: auto;
     margin-right: auto;
+    direction: rtl;
+    text-align: center;
 }
 
 /* Messages */
@@ -639,14 +645,16 @@ body {
     display: flex;
     margin-bottom: var(--space-6);
     animation: fadeInUp 0.3s ease-out;
+    direction: rtl;
+    text-align: right;
 }
 
 .message.user {
-    justify-content: flex-end;
+    justify-content: flex-start;
 }
 
 .message.bot {
-    justify-content: flex-start;
+    justify-content: flex-end;
 }
 
 .message-content {
@@ -655,19 +663,23 @@ body {
     border-radius: var(--radius-lg);
     position: relative;
     word-wrap: break-word;
+    direction: rtl;
+    text-align: right;
+    font-family: 'Tahoma', 'Arial', sans-serif;
+    line-height: 1.6;
 }
 
 .message.user .message-content {
     background: var(--primary);
     color: white;
-    border-bottom-right-radius: var(--radius-sm);
+    border-bottom-left-radius: var(--radius-sm);
 }
 
 .message.bot .message-content {
     background: white;
     color: var(--gray-900);
     border: 1px solid var(--gray-200);
-    border-bottom-left-radius: var(--radius-sm);
+    border-bottom-right-radius: var(--radius-sm);
     box-shadow: var(--shadow-sm);
 }
 
@@ -772,12 +784,14 @@ body {
     border: none;
     outline: none;
     resize: none;
-    font-family: inherit;
+    font-family: 'Tahoma', 'Arial', sans-serif;
     font-size: var(--font-size-base);
     line-height: 1.5;
     color: var(--gray-900);
     min-height: 20px;
     max-height: 150px;
+    direction: rtl;
+    text-align: right;
 }
 
 .message-input::placeholder {

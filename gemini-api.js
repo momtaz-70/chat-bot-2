@@ -62,14 +62,14 @@ class GeminiAPIService {
         if (!testKey) {
             return {
                 success: false,
-                message: 'API key is required'
+                message: 'کلید API ضروری است'
             };
         }
 
         if (!this.validateApiKeyFormat(testKey)) {
             return {
                 success: false,
-                message: 'Invalid API key format'
+                message: 'فرمت کلید API نامعتبر است'
             };
         }
 
@@ -80,7 +80,7 @@ class GeminiAPIService {
             
             return {
                 success: true,
-                message: 'Connection successful'
+                message: 'اتصال با موفقیت برقرار شد'
             };
         } catch (error) {
             return {
@@ -101,15 +101,15 @@ class GeminiAPIService {
         const key = apiKey || this.apiKey;
         
         if (!key) {
-            throw new Error('API key is required');
+            throw new Error('کلید API ضروری است');
         }
 
         if (!message || message.trim().length === 0) {
-            throw new Error('Message cannot be empty');
+            throw new Error('پیام نمی‌تواند خالی باشد');
         }
 
         if (message.length > 4000) {
-            throw new Error('Message is too long (max 4000 characters)');
+            throw new Error('پیام خیلی طولانی است (حداکثر 4000 کاراکتر)');
         }
 
         const requestConfig = { ...this.defaultConfig, ...config };
@@ -177,18 +177,18 @@ class GeminiAPIService {
             
             if (!data.candidates || data.candidates.length === 0) {
                 console.error('❌ No candidates in response:', data);
-                throw new Error('No response generated from the model');
+                throw new Error('هیچ پاسخی از مدل تولید نشد');
             }
 
             const candidate = data.candidates[0];
             console.log('🔍 Candidate data:', JSON.stringify(candidate, null, 2));
             
             if (candidate.finishReason === 'SAFETY') {
-                throw new Error('Response blocked due to safety concerns');
+                throw new Error('پاسخ به دلیل ملاحظات ایمنی مسدود شد');
             }
             
             if (candidate.finishReason === 'RECITATION') {
-                throw new Error('Response blocked due to recitation concerns');
+                throw new Error('پاسخ به دلیل ملاحظات تکرار محتوا مسدود شد');
             }
             
             if (candidate.finishReason === 'MAX_TOKENS') {
@@ -215,17 +215,17 @@ class GeminiAPIService {
                 
                 // If MAX_TOKENS, provide a helpful message
                 if (candidate.finishReason === 'MAX_TOKENS') {
-                    throw new Error('Response was truncated due to token limit. Please try a shorter message or increase maxTokens in settings.');
+                    throw new Error('پاسخ به دلیل محدودیت طول کوتاه شد. لطفاً پیام کوتاه‌تری بفرستید یا بیشینه طول پاسخ را در تنظیمات افزایش دهید.');
                 }
                 
-                throw new Error('Invalid response format from the model');
+                throw new Error('فرمت پاسخ مدل نامعتبر است');
             }
             
             if (!responseText || responseText.trim() === '') {
                 if (candidate.finishReason === 'MAX_TOKENS') {
-                    throw new Error('Response was completely truncated due to token limit. Please increase maxTokens in settings.');
+                    throw new Error('پاسخ به طور کامل به دلیل محدودیت طول کوتاه شد. لطفاً بیشینه طول پاسخ را در تنظیمات افزایش دهید.');
                 }
-                throw new Error('Empty response from the model');
+            throw new Error('پاسخ خالی از مدل');
             }
             
             // Add truncation warning if needed
@@ -241,11 +241,11 @@ class GeminiAPIService {
             }
             
             if (error.name === 'AbortError') {
-                throw new Error('Request was cancelled');
+            throw new Error('درخواست لغو شد');
             }
             
             if (error.name === 'TypeError' && error.message.includes('fetch')) {
-                throw new Error('Network error - please check your internet connection');
+            throw new Error('خطای شبکه - لطفاً اتصال اینترنت خود را بررسی کنید');
             }
             
             throw error;
@@ -261,22 +261,22 @@ class GeminiAPIService {
         if (error instanceof APIError) {
             switch (error.status) {
                 case 400:
-                    return 'Invalid request. Please check your message format.';
+                    return 'درخواست نامعتبر. لطفاً فرمت پیام را بررسی کنید.';
                 case 401:
-                    return 'Invalid API key. Please check your credentials.';
+                    return 'کلید API نامعتبر. لطفاً اعتبار خود را بررسی کنید.';
                 case 403:
-                    return 'Access forbidden. Please check your API key permissions.';
+                    return 'دسترسی ممنوع. لطفاً مجوزهای کلید API خود را بررسی کنید.';
                 case 404:
-                    return 'API endpoint not found. Please try again later.';
+                    return 'API endpoint یافت نشد. لطفاً بعداً دوباره تلاش کنید.';
                 case 429:
-                    return 'Rate limit exceeded. Please wait before sending another message.';
+                    return 'حد مجاز درخواست رد شد. لطفاً قبل از ارسال پیام بعدی صبر کنید.';
                 case 500:
                 case 502:
                 case 503:
                 case 504:
-                    return 'Server error. Please try again in a moment.';
+                    return 'خطای سرور. لطفاً کمی بعد دوباره تلاش کنید.';
                 default:
-                    return `API error (${error.status}): ${error.message}`;
+                    return `خطای API (${error.status}): ${error.message}`;
             }
         }
 
@@ -284,7 +284,7 @@ class GeminiAPIService {
             return error.message;
         }
 
-        return 'An unexpected error occurred. Please try again.';
+        return 'خطای غیرمنتظره رخ داد. لطفاً دوباره تلاش کنید.';
     }
 
     /**
